@@ -4,50 +4,6 @@ Home Assistant 自定义通知集成：把 HA 告警、自动化消息直接推�
 
 集成直接调用 QQ 机器人官方 API，内部处理 `access_token` 的获取、缓存与刷新，不依赖任何第三方 Webhook 服务。
 
-## 更新说明
-
-### 1.2.0（发布版）
-
-- 新增**选项流程**：可以在「设置 → 设备与服务 → QQBot Notify → 配置」里随时修改默认接收者（留空即删除），保存后自动重载；
-- **添加集成时即校验凭证**：AppID/AppSecret 填错直接在表单上报“AppID 或 AppSecret 不正确”，不再等到发送时才失败；
-- 发送遇到 `11242`/`11253`/`40012002` 这类 token 失效错误时，会丢弃缓存的 `access_token` **自动重试一次**；
-- 异常按类型区分（凭证错误 / 网络问题 / token 失效），便于上层给出准确提示。
-
-### 1.1.1（修复 401 `Token错误` / code 11242）
-
-1.1.0 发送时用的是 `Authorization: Bot <access_token>`（旧版频道接口的写法），QQ v2 接口只认
-`Authorization: QQBot <access_token>`，因此发送阶段会返回：
-
-```text
-发送 QQ 消息失败（HTTP 401）：{"message":"Token错误","code":11242,"err_code":40012002,...}
-```
-
-1.1.1 改用官方文档与官方 SDK（[botpy](https://github.com/tencent-connect/botpy) 中 `TYPE_BOT = "QQBot"`）一致的
-`QQBot ` 前缀，并按官方 SDK 补上 `X-Union-Appid` 头；同时对常见错误码追加中文排查建议。
-
-### 1.1.0（修复“集成不能用”）
-
-1.0.x 版本用的是**旧版 YAML 通知平台接口**（`async_get_service` + `BaseNotificationService`），
-而这个集成是通过 UI 配置条目（Config Entry）加载的。HA 2026.7 中配置条目走的是
-`EntityPlatform.async_setup_entry` → `platform.async_setup_entry(...)` 这条路，
-旧接口只在 `configuration.yaml` 写 `notify: - platform: qqbot_notify` 时才会被调用。
-结果就是平台永远加载失败：
-
-```text
-Error while setting up qqbot_notify platform for notify:
-module 'custom_components.qqbot_notify.notify' has no attribute 'async_setup_entry'
-```
-
-于是不会创建任何 notify 实体，也不会注册 `notify.qqbot_notify` 服务，自动化报“找不到操作”。
-
-1.1.0 改为现代的 [Notify 实体](https://developers.home-assistant.io/docs/core/entity/notify/) 实现：
-
-- `notify.py` 提供 `async_setup_entry` 并创建 `NotifyEntity` 子类；
-- 凭证与默认接收者存放在 `ConfigEntry.runtime_data`，多机器人不再互相串数据；
-- 新增 `qqbot_notify.send` 动作，支持 `target` / `is_group` / `msg_id` / 多机器人 `entry_id`；
-- 使用 HA 自带的 aiohttp 会话并加 15 秒超时，不再泄漏 ClientSession；
-- 补齐 `strings.json`、`translations/`、`services.yaml`，配置界面有中文/英文文案。
-
 ## 前置要求
 
 - Home Assistant 2025.1.0 及以上（已在 2026.7 上实测推送成功）
