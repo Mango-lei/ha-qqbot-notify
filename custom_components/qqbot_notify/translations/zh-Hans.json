@@ -1,0 +1,72 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "QQBot Notify",
+        "description": "填写 QQ 开放平台机器人的 AppID 与 AppSecret；默认接收者（OpenID）可选填。",
+        "data": {
+          "appid": "AppID",
+          "secret": "AppSecret",
+          "default_target": "默认接收者 OpenID（可选）"
+        }
+      }
+    },
+    "error": {
+      "invalid_appid": "AppID 必须是纯数字",
+      "secret_required": "AppSecret 不能为空",
+      "invalid_auth": "AppID 或 AppSecret 不正确，请与开放平台管理端核对",
+      "cannot_connect": "连接 QQ 开放平台失败，请检查网络后重试",
+      "unknown": "出现未知错误，请查看 Home Assistant 日志"
+    },
+    "abort": {
+      "already_configured": "该 AppID 已配置"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "QQBot Notify 选项",
+        "description": "默认接收者可以随时修改；留空表示删除默认接收者。",
+        "data": {
+          "default_target": "默认接收者 OpenID（可选）"
+        }
+      }
+    }
+  },
+  "services": {
+    "send": {
+      "name": "发送消息",
+      "description": "通过 QQ 机器人向指定用户或群推送消息，可覆盖默认接收者。",
+      "fields": {
+        "message": {
+          "name": "消息内容",
+          "description": "要发送的文本内容。"
+        },
+        "title": {
+          "name": "标题",
+          "description": "可选，会作为消息的第一行。"
+        },
+        "target": {
+          "name": "接收者",
+          "description": "user_openid 或 group_openid；留空则使用配置条目的默认接收者。"
+        },
+        "is_group": {
+          "name": "群聊消息",
+          "description": "打开后走群聊接口（此时 target 为 group_openid）。"
+        },
+        "msg_id": {
+          "name": "回复的 msg_id",
+          "description": "可选，被动回复时使用，来自 QQ 消息事件。"
+        },
+        "msg_seq": {
+          "name": "回复序号",
+          "description": "同一个 msg_id 的第几条回复，从 1 开始。"
+        },
+        "entry_id": {
+          "name": "配置条目 ID",
+          "description": "配置了多个 QQ 机器人时，指定使用哪一个。"
+        }
+      }
+    }
+  }
+}

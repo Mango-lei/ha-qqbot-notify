@@ -1,0 +1,38 @@
+send:
+  fields:
+    message:
+      required: true
+      selector:
+        text:
+          multiline: true
+      example: "检测到水浸，请立刻检查。"
+    title:
+      required: false
+      selector:
+        text:
+      example: "HA 通知"
+    target:
+      required: false
+      selector:
+        text:
+      example: "user_openid 或 group_openid"
+    is_group:
+      required: false
+      default: false
+      selector:
+        boolean:
+    msg_id:
+      required: false
+      selector:
+        text:
+      example: "ROBOT1.0_xxxxxxxx"
+    msg_seq:
+      required: false
+      default: 1
+      selector:
+        text:
+      example: "1"
+    entry_id:
+      required: false
+      selector:
+        text:

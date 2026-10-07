@@ -1,0 +1,17 @@
+{
+  "domain": "qqbot_notify",
+  "name": "QQBot Notify",
+  "version": "1.2.0",
+  "codeowners": [
+    "@Mango-lei"
+  ],
+  "config_flow": true,
+  "dependencies": [
+    "notify"
+  ],
+  "documentation": "https://github.com/Mango-lei/ha-qqbot-notify",
+  "integration_type": "service",
+  "iot_class": "cloud_push",
+  "issue_tracker": "https://github.com/Mango-lei/ha-qqbot-notify/issues",
+  "requirements": []
+}

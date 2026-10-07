@@ -1,0 +1,72 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "QQBot Notify",
+        "description": "Fill in the AppID and AppSecret of your QQ open platform bot. The default recipient (OpenID) is optional.",
+        "data": {
+          "appid": "AppID",
+          "secret": "AppSecret",
+          "default_target": "Default recipient OpenID (optional)"
+        }
+      }
+    },
+    "error": {
+      "invalid_appid": "AppID must contain digits only",
+      "secret_required": "AppSecret must not be empty",
+      "invalid_auth": "AppID or AppSecret is incorrect",
+      "cannot_connect": "Failed to reach the QQ open platform, please try again",
+      "unknown": "Unexpected error, check the Home Assistant log"
+    },
+    "abort": {
+      "already_configured": "This AppID is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "QQBot Notify options",
+        "description": "The default recipient can be changed at any time. Leave it empty to remove it.",
+        "data": {
+          "default_target": "Default recipient OpenID (optional)"
+        }
+      }
+    }
+  },
+  "services": {
+    "send": {
+      "name": "Send message",
+      "description": "Send a QQ message to a user or group through the QQ bot, optionally overriding the default recipient.",
+      "fields": {
+        "message": {
+          "name": "Message",
+          "description": "Text content to send."
+        },
+        "title": {
+          "name": "Title",
+          "description": "Optional title, sent as the first line of the message."
+        },
+        "target": {
+          "name": "Recipient",
+          "description": "user_openid or group_openid. Falls back to the default recipient of the config entry."
+        },
+        "is_group": {
+          "name": "Group message",
+          "description": "Send through the group API (target is a group_openid)."
+        },
+        "msg_id": {
+          "name": "Reply to msg_id",
+          "description": "Optional msg_id for a passive reply, taken from a QQ message event."
+        },
+        "msg_seq": {
+          "name": "Reply sequence",
+          "description": "Reply number for the same msg_id, starting at 1."
+        },
+        "entry_id": {
+          "name": "Config entry ID",
+          "description": "Select which bot to use when several QQ bots are configured."
+        }
+      }
+    }
+  }
+}
